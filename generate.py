@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument("-s", "--blocksizevariation", type=float, default=1.0, help="1 = low, 5 = high")
     parser.add_argument("-e", "--powerlawexponent", type=float, default=-2.1, help="The power law exponent")
     parser.add_argument("-d", "--density", type=float, default=1.0, help="1 - d fraction of edges will be removed")
-    parser.add_argument("--directory", type=str, default="./")
+    parser.add_argument("--directory", type=str, default="./", help="The directory in which to store the graphs")
     parser.add_argument("-r", "--remote", type=str, default="",
                         help="""If provided, will save files on remote system. Needs username and password to be
                              manually entered.""")
@@ -62,14 +62,14 @@ def save_graph(graph, true_partition, utility, filename):
         sftp = utility.open_sftp()
         with sftp.open("{}.tsv".format(filename), 'w') as file:
             file.write(graph_data)
-        with sftp.open("{}_partition.tsv".format(filename), 'w') as file:
+        with sftp.open("{}_truePartition.tsv".format(filename), 'w') as file:
             file.write(partition_data)
     else:
         print(utility)
         print(filename)
         with io.open("{}.tsv".format(filename), 'w') as file:
             file.write(graph_data)
-        with io.open("{}_partition.tsv".format(filename), 'w') as file:
+        with io.open("{}_truePartition.tsv".format(filename), 'w') as file:
             file.write(partition_data)
 # End of save_graph()
 
