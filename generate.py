@@ -28,8 +28,8 @@ def parse_args():
     parser.add_argument("-s", "--blocksizevariation", type=float, default=1.0, help="1 = low, 5 = high")
     parser.add_argument("-e", "--powerlawexponent", type=float, default=-2.1, help="The power law exponent")
     parser.add_argument("-d", "--density", type=float, default=1.0, help="1 - d fraction of edges will be removed")
-    parser.add_argument("--directory", type=str, default="/groups/synergy_lab/wanyef/synthetic_graphs")
-    parser.add_argument("-r", "--remote", type=str, default="cascades1.arc.vt.edu",
+    parser.add_argument("--directory", type=str, default="./")
+    parser.add_argument("-r", "--remote", type=str, default="",
                         help="""If provided, will save files on remote system. Needs username and password to be
                              manually entered.""")
     return parser.parse_args()
