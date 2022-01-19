@@ -239,13 +239,6 @@ def generate(args, utility):
 if __name__ == "__main__":
     args = parse_args()
     utility = os
-    # namedtuple('Args', ['numvertices', 'communities', 'communityexponent', 'maxdegree', 'overlap',
-    #                     'blocksizevariation', 'powerlawexponent', 'density', 'directory', 'remote'])
-    # params = Args(20, 3, -1, 8, 15.0, 1.0, -1.75, 1.0,
-    #               os.path.normpath(args.directory + "/test"), "")
-    generate(args, utility)
-    exit()
-    # This is outside the generate() function to prevent multiple 2FA
     if args.remote:
         print("Getting credentials for logging into remote system")
         username = input("Username: ")
@@ -255,115 +248,6 @@ if __name__ == "__main__":
         ssh.connect(args.remote, username=username, password=password, timeout=2000)
         ssh.exec_command("mkdir -p {}".format(args.directory))
         utility = ssh
-    # Default generation parameters
-    d_nvertices = 300000
-    d_communities = -1
-    d_communityexponent = 0.5
-    d_maxdegree = 0.05
-    d_overlap = 3.0
-    d_blocksizevariation = 3.0
-    d_powerlawexponent = -2.1
-    d_density = 1.0
-    print("===== Starting Density Experiments =====")
-    # Sparsity correlates too highly with degree distribution, so we canned
-    # these experiments
-    directory = os.path.normpath(args.directory + "/density")
-    densities = 1.0 - (0.199 * np.arange(1, 6))
-    # densities = np.arange(0.1, 1.1, 0.1)
-    for i, density in enumerate(densities):
-        print("Generating graph {}/{} with density {}".format(i+1, densities.size, densities[i]))
-        # To explore a larger range of sparsities, we make the graph denser than usual and then decrease
-        # the density. To do so, use higher power law exponent
-        params = Args(100000, d_communities, d_communityexponent, d_maxdegree, d_overlap,
-                      d_blocksizevariation, -1.0, density, directory, args.remote)
-        try:
-            generate(params, utility)
-        except Exception as e:
-            print(e)
-    # Start generation
-#     print("===== Starting Sparsity Experiments =====")
-#    # Sparsity correlates too highly with degree distribution, so we canned
-#    # these experiments
-#     directory = os.path.normpath(args.directory + "/sparsity")
-#     densities = np.arange(0.1, 1.1, 0.1)
-"""
-    for i, density in enumerate(densities):
-        print("Generating graph {}/{} with density {}".format(i+1, densities.size, densities[i]))
-        # To explore a larger range of sparsities, we make the graph denser than usual and then decrease
-        # the density. To do so, use higher power law exponent
-        params = Args(200000, d_communities, d_communityexponent, d_maxdegree, d_overlap,
-                      d_blocksizevariation, -1.5, density, directory, args.remote)
-        try:
-            generate(params, utility)
-        except Exception as e:
-            print(e)
-    print("===== Starting Degree Distribution Experiments =====")
-    directory = os.path.normpath(args.directory + "/distrubtion")
-    exponents = np.arange(-3.5, -1.00, 0.25)
-    for i, exponent in enumerate(exponents):
-        print("Generating graph {}/{} with exponent {}".format(i+1, exponents.size, exponents[i]))
-        params = Args(100000, d_communities, d_communityexponent, d_maxdegree, d_overlap,
-                      d_blocksizevariation, exponent, d_density, directory, args.remote)
-        try:
-            generate(params, utility)
-        except Exception as e:
-            print(e)
-    print("===== Starting Community Size Experiments =====")
-    directory = os.path.normpath(args.directory + "/communities")
-    communities = 2 ** np.arange(1, 14)
-    for i, number in enumerate(communities):
-        print("Generating graph {}/{} with {} communities".format(i+1, communities.size, communities[i]))
-        params = Args(d_nvertices, number, -1, d_maxdegree, d_overlap,
-                      d_blocksizevariation, d_powerlawexponent, d_density, directory, args.remote)
-        try:
-            generate(params, utility)
-        except Exception as e:
-            print(e)
-    print("===== Starting Community Overlap Experiments =====")
-    directory = os.path.normpath(args.directory + "/overlap")
-    overlaps = np.arange(1.0, 6.5, 0.5)
-    for i, overlap in enumerate(overlaps):
-        print("Generating graph {}/{} with overlap {}".format(i+1, overlaps.size, overlaps[i]))
-        params = Args(d_nvertices, d_communities, d_communityexponent, d_maxdegree, overlap,
-                      d_blocksizevariation, d_powerlawexponent, d_density, directory, args.remote)
-        try:
-            generate(params, utility)
-        except Exception as e:
-            print(e)
-    print("===== Starting Community Size Variation Experiments =====")
-    directory = os.path.normpath(args.directory + "/variation")
-    variations = np.arange(1.0, 6.5, 0.5)
-    for i, variation in enumerate(variations):
-        print("Generating graph {}/{} with variation {}".format(i+1, variations.size, variations[i]))
-        params = Args(d_nvertices, d_communities, d_communityexponent, d_maxdegree, d_overlap,
-                      variation, d_powerlawexponent, d_density, directory, args.remote)
-        try:
-            generate(params, utility)
-        except Exception as e:
-            print(e)
-    print("===== Starting Graph Size Experiments =====")
-    directory = os.path.normpath(args.directory + "/scaling")
-    sizes = 1000 * (2 ** np.arange(11, 13))  # 11, 13)) 
-    for i, size in enumerate(sizes):
-        print("Generating graph {}/{} with size {}".format(i+1, sizes.size, sizes[i]))
-        params = Args(size, d_communities, d_communityexponent, d_maxdegree, d_overlap,
-                      d_blocksizevariation, d_powerlawexponent, d_density, directory, args.remote)
-        try:
-            generate(params, utility)
-        except Exception as e:
-            print(e)
-    print("===== Starting Supernode Experiments =====")
-    directory = os.path.normpath(args.directory + "/supernode")
-    maxdegrees = np.asarray([0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5])
-    for i, maxdegree in enumerate(maxdegrees):
-        print("Generating graph {}/{} with max degree {}".format(i+1, maxdegrees.size, maxdegrees[i]))
-        params = Args(d_nvertices, d_communities, d_communityexponent, maxdegree, d_overlap,
-                      d_blocksizevariation, d_powerlawexponent, d_density, directory, args.remote)
-        try:
-            generate(params, utility)
-        except Exception as e:
-            print(e)
-    if args.remote:
-        ssh.close()
-"""
-
+    generate(args, utility)
+    exit()
+    
