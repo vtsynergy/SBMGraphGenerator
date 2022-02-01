@@ -23,3 +23,9 @@ Usage:
 To generate a graph locally, use `python generate.py <args>`. Note that generating graphs with more than a few million vertices/edges can take several hours.
 
 !WARNING: EXPERIMENTAL! To generate a graph on a remote system, use `python generate.py --remote <remote_url> <args>`. The generator uses the [Paramiko](https://www.paramiko.org/) and [getpass](https://docs.python.org/3/library/getpass.html) packages for authentication. You will need to provide your username and password on the command-line. Systems that do not support a username + password authentication method are not supported.
+
+&copy; Virginia Polytechnic Institute and State University, 2022.
+
+## License
+
+Please refer to the included [LICENSE](./LICENSE) file.
